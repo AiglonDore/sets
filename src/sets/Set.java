@@ -45,8 +45,25 @@ public interface Set<E> extends Collection<E>
 	@Override
 	public default boolean addAll(Collection<? extends E> c) throws NullPointerException
 	{
-		// TODO 000 Set#addAll(Collection): replace with implementation using #add(Object)
-		return false;
+		// DONE 000 Set#addAll(Collection): replace with implementation using #add(Object)
+		boolean output = false;
+		
+		if (c == null) throw new NullPointerException();
+		
+		for (Iterator<? extends E> it =c.iterator();it.hasNext();)
+		{
+			if (it.next() == null)
+			{
+				throw new NullPointerException();
+			}
+			
+			if (!this.contains(it.next()))
+			{
+				output = this.add(it.next());
+			}
+		}
+		
+		return output;
 	}
 
 	/**
@@ -55,7 +72,11 @@ public interface Set<E> extends Collection<E>
 	@Override
 	public default void clear()
 	{
-		// TODO 001 Set#clear(): replace with implementation using the iterator
+		// DONE 001 Set#clear(): replace with implementation using the iterator
+		for (Iterator<E> it = this.iterator();it.hasNext();)
+		{
+			it.remove();
+		}
 	}
 
 	/**
@@ -71,7 +92,14 @@ public interface Set<E> extends Collection<E>
 	@Override
 	public default boolean contains(Object o)
 	{
-		// TODO 002 Set#contains(Object): replace with implementation using the iterator
+		// DONE 002 Set#contains(Object): replace with implementation using the iterator
+		for (Iterator<E> it = this.iterator();it.hasNext();)
+		{
+			if (it.next().equals(o))
+			{
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -92,7 +120,22 @@ public interface Set<E> extends Collection<E>
 		NullPointerException, ClassCastException
 	{
 		// TODO 003 Set#containsAll(Collection): replace with implementation using #contains(Object)
-		return false;
+		if (c == null)
+		{
+			throw new NullPointerException();
+		}
+		for (Iterator<?> it = c.iterator();it.hasNext();)
+		{
+			if (it.next() instanceof elementsType())
+			{
+				if (!contains(it.next())) return false;
+			}
+			else
+			{
+				throw new ClassCastException();
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -102,8 +145,8 @@ public interface Set<E> extends Collection<E>
 	@Override
 	public default boolean isEmpty()
 	{
-		// TODO 004 Set#isEmpty(): replace with implementation using the iterator
-		return false;
+		// DONE 004 Set#isEmpty(): replace with implementation using the iterator
+		return iterator().hasNext();
 	}
 
 	/**
@@ -122,7 +165,16 @@ public interface Set<E> extends Collection<E>
 	@Override
 	public default boolean remove(Object o) throws NullPointerException
 	{
-		// TODO 005 Set#remove(Object): replace with implementation using the iterator
+		// DONE 005 Set#remove(Object): replace with implementation using the iterator
+		if (o == null) throw new NullPointerException();
+		for (Iterator<E> it = iterator(); it.hasNext();)
+		{
+			if (it.next().equals(o))
+			{
+				it.remove();
+				return true;
+			}
+		}
 		return false;
 	}
 
