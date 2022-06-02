@@ -126,7 +126,7 @@ public interface Set<E> extends Collection<E>
 		}
 		for (Iterator<?> it = c.iterator();it.hasNext();)
 		{
-			if (it.next() instanceof elementsType())
+			if (elementsType().isInstance(it.next()))
 			{
 				if (!contains(it.next())) return false;
 			}
