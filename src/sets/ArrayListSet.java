@@ -43,7 +43,7 @@ public class ArrayListSet<E> extends AbstractSet<E>
 		list = new ArrayList<E>();
 		for (E elt : c)
 		{
-			list.add(elt);
+			if (elt != null && !this.contains(elt)) list.add(elt);
 		}
 	}
 
@@ -63,8 +63,8 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	{
 		// DONE 202 ArrayListSet#add(E): replace with implementation
 		if (e == null) throw new NullPointerException();
-		
-		return list.add(e);
+		if (!list.contains(e))	return list.add(e);
+		return false;
 	}
 
 	/**
@@ -172,6 +172,7 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	 * @return a new array of T containing all elements of this set
 	 * @see Vector#toArray() implementation for inspiration
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T[] toArray(T[] a)
 	{

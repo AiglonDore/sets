@@ -196,6 +196,7 @@ public class ArraySet<E> extends AbstractSet<E>
 	public boolean contains(Object o)
 	{
 		// DONE 313 ArraySet#contains(Object): replace with implementation
+		if (o == null) return false;
 		for (int i = 0; i < elementCount; i++)
 		{
 			if (elementData[i].equals(o)) return true;
@@ -252,7 +253,7 @@ public class ArraySet<E> extends AbstractSet<E>
 			}
 		}
 		
-		return index >=0 && removeAtIndex(index);
+		return removeAtIndex(index);
 	}
 
 	/**
@@ -595,6 +596,8 @@ public class ArraySet<E> extends AbstractSet<E>
 		{
 			// DONE 309 ArraySetIterator#next(): replace with implementation
 			index++;
+			if (index >= elementCount) throw new NoSuchElementException("Index is out of bounds.");
+			nextCalled = true;
 			return (F) elementData[index];
 		}
 
@@ -622,7 +625,7 @@ public class ArraySet<E> extends AbstractSet<E>
 				removeAtIndex(index);
 				nextCalled = false;
 			}
-			else throw new IllegalStateException("next has not been called yet");
+			else throw new IllegalStateException("Next has not been called yet");
 		}
 	}
 }

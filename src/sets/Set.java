@@ -52,14 +52,15 @@ public interface Set<E> extends Collection<E>
 		
 		for (Iterator<? extends E> it =c.iterator();it.hasNext();)
 		{
-			if (it.next() == null)
+			E elt = (E) it.next();
+			if (elt == null)
 			{
 				throw new NullPointerException();
 			}
 			
-			if (!this.contains(it.next()))
+			if (!this.contains(elt))
 			{
-				output = this.add(it.next());
+				output = this.add(elt);
 			}
 		}
 		
@@ -127,9 +128,10 @@ public interface Set<E> extends Collection<E>
 		}
 		for (Iterator<?> it = c.iterator();it.hasNext();)
 		{
-			if (elementsType().isInstance(it.next()))
+			Object elt = it.next();
+			if (elementsType().isInstance(elt))
 			{
-				if (!contains(it.next())) return false;
+				if (!contains(elt)) return false;
 			}
 			else
 			{
@@ -203,13 +205,17 @@ public interface Set<E> extends Collection<E>
 		boolean output = true;
 		for (Iterator<?> it = c.iterator(); it.hasNext();)
 		{
-			if (elementsType().isInstance(it.next()))
+			Object elt = it.next();
+			if (elt != null)
 			{
-				output = output && remove(it.next());
-			}
-			else
-			{
-				throw new ClassCastException();
+				if (elementsType().isInstance(elt))
+				{
+					output = output && remove(elt);
+				}
+				else
+				{
+					throw new ClassCastException();
+				}
 			}
 		}
 		return output;
@@ -232,7 +238,8 @@ public interface Set<E> extends Collection<E>
 		boolean output = false;
 		for (Iterator<E> it = iterator(); it.hasNext();)
 		{
-			if (!c.contains(it.next()))
+			E elt = it.next();
+			if (!c.contains(elt))
 			{
 				it.remove();
 				output = true;

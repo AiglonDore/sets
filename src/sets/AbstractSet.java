@@ -43,8 +43,13 @@ public abstract class AbstractSet<E> implements Set<E>
 		}
 		if (o instanceof Set)
 		{
-			Set obj = (Set) o;
-			return obj.contains(this) && this.contains(obj);
+			Set<?> obj = (Set<?>) o;
+			boolean output = true;
+			for (Object elt : obj)
+			{
+				if (!this.contains(elt)) return false;
+			}
+			return this.containsAll(obj);
 		}
 		return false;
 	}
