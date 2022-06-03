@@ -1,6 +1,7 @@
 package sets;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
@@ -174,9 +175,27 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	@Override
 	public <T> T[] toArray(T[] a)
 	{
-		// TODO 210 ArrayListSet#toArray(T[]): replace with implementation
-		return null;
-
+		// DONE 210 ArrayListSet#toArray(T[]): replace with implementation
+		if (a.length >= this.size())
+		{
+			int  i = 0;
+			for (E elt : list)
+			{
+				a[i] = (T) elt;
+				i++;
+			}
+			while (i < a.length)
+			{
+				a[i] = null;
+				i++;
+			}
+			return a;
+		}
+		else
+		{
+			a = Arrays.copyOf(a, list.size());
+			return this.toArray(a);
+		}
 	}
 
 	// -------------------------------------------------------------------------

@@ -77,6 +77,7 @@ public class ArraySet<E> extends AbstractSet<E>
 	 * Creates an empty set of capacity {@link #DefaultCapacity} and
 	 * capacity increment {@link #DefaultCapacityIncrement}
 	 */
+	@SuppressWarnings("unchecked")
 	public ArraySet()
 	{
 		// DONE 301 ArraySet#ArraySet(): replace with implementation
@@ -91,6 +92,7 @@ public class ArraySet<E> extends AbstractSet<E>
 	 * @param initialCapacity the initial capacity of this set
 	 * @throws IllegalArgumentException if provided initialCapacity is less than 1.
 	 */
+	@SuppressWarnings("unchecked")
 	public ArraySet(int initialCapacity) throws IllegalArgumentException
 	{
 		// DONE 302 ArraySet#ArraySet(int): replace with implementation
@@ -110,26 +112,29 @@ public class ArraySet<E> extends AbstractSet<E>
 	 * @implSpec If collection c is empty then the expected capacity of this set
 	 * should revert to {@link #DefaultCapacity}
 	 */
+	@SuppressWarnings("unchecked")
 	public ArraySet(Collection<? extends E> c)
 	{
 		// DONE 303 ArraySet#ArraySet(Collection): replace with implementation
-		this(c.size());
 		if (c.isEmpty())
 		{
 			elementData = (E[]) new Object[DefaultCapacity];
+			elementCount = 0;
 		}
 		else
 		{
+			elementCount = 0;
+			elementData = (E[]) new Object[c.size()];
 			for (E elt : c)
 			{
 				if (elt != null && !this.contains(elt))
 				{
+					elementData[elementCount] = elt;
 					elementCount++;
-					elementData[elementCount - 1] = elt;
 				}
 			}
-			strip();
 		}
+		capacityIncrement = ArraySet.DefaultCapacityIncrement;
 	}
 
 	// -------------------------------------------------------------------------
@@ -156,6 +161,7 @@ public class ArraySet<E> extends AbstractSet<E>
 				grow();
 			}
 			elementData[elementCount] = e;
+			elementCount++;
 			return true;
 		}
 		return false;
@@ -166,6 +172,7 @@ public class ArraySet<E> extends AbstractSet<E>
 	 * @implNote Faster implementation than {@link Set#clear()} since it
 	 * doesn't need to use the iterator
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void clear()
 	{
@@ -291,18 +298,37 @@ public class ArraySet<E> extends AbstractSet<E>
 	 * @throws NullPointerException if the specified array is null
 	 * @see Vector#toArray() implementation for inspiration
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T[] toArray(T[] a)
 	{
-		// TODO 318 ArraySet#toArray(T[]): replace with implementation
-	    return a;
+		// DONE 318 ArraySet#toArray(T[]): replace with implementation
+		if (a.length >= this.size())
+		{
+			int  i = 0;
+			for (E elt : elementData)
+			{
+				a[i] = (T) elt;
+				i++;
+			}
+			while (i < a.length)
+			{
+				a[i] = null;
+				i++;
+			}
+			return a;
+		}
+		else
+		{
+			a = Arrays.copyOf(a, elementData.length);
+			return this.toArray(a);
+		}
 	}
 
 	// -------------------------------------------------------------------------
 	// Object overrides
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("unchecked")
 	/**
 	 * Returns a clone of this set. The copy will contain a reference to a
 	 * clone of the internal data array, not a reference to the original
@@ -313,8 +339,12 @@ public class ArraySet<E> extends AbstractSet<E>
 	@Override
 	public Object clone()
 	{
-		// TODO 319 ArraySet#clone(): replace with implementation
-		ArraySet<E> newSet = null;
+		// DONE 319 ArraySet#clone(): replace with implementation
+		ArraySet<E> newSet = new ArraySet<E>(this.capacity(),this.capacityIncrement);
+		for (int i =0; i < elementCount; i++)
+		{
+			newSet.elementData[i] = this.elementData[i];
+		}
 		return newSet;
 	}
 
@@ -334,9 +364,9 @@ public class ArraySet<E> extends AbstractSet<E>
 		for (int i = 0; i < elementCount - 1; i++)
 		{
 			builder.append(elementData[i].toString());
-			builder.append(',');
+			builder.append(", ");
 		}
-		builder.append(elementData[elementCount-1]);
+		if (elementCount > 1) builder.append(elementData[elementCount - 1].toString());
 
 		builder.append('}');
 		return builder.toString();
@@ -357,9 +387,12 @@ public class ArraySet<E> extends AbstractSet<E>
 	@Override
 	public Set<E> union(Set<E> other) throws NullPointerException
 	{
-		// TODO 321 ArraySet#union(Set): replace with implementation
+		// DONE 321 ArraySet#union(Set): replace with implementation
 		// The new set has (at most) the size of both sets
-		Set<E> result = null;
+		if (other == null) throw new NullPointerException();
+		Set<E> result = new ArraySet<E>(other.size()+ this.size());
+		result.addAll(this);
+		result.addAll(other);
 		return result;
 	}
 
@@ -374,9 +407,17 @@ public class ArraySet<E> extends AbstractSet<E>
 	@Override
 	public Set<E> intersection(Set<E> other) throws NullPointerException
 	{
-		// TODO 322 ArraySet#intersection(Set): replace with implementation
+		// DONE 322 ArraySet#intersection(Set): replace with implementation
 		// The new set has (at most) the size of this
-		Set<E> result = null;
+		if (other == null) throw new NullPointerException();
+		Set<E> result = new ArraySet<E>(this.size());
+		for (E elt : this)
+		{
+			if (other.contains(elt))
+			{
+				result.add(elt);
+			}
+		}
 		return result;
 	}
 
@@ -391,9 +432,10 @@ public class ArraySet<E> extends AbstractSet<E>
 	@Override
 	public Set<E> difference(Set<E> other) throws NullPointerException
 	{
-		// TODO 323 ArraySet#difference(Set): replace with implementation
+		// DONE 323 ArraySet#difference(Set): replace with implementation
 		// The new set has (at most) the size of the smallest set
-		Set<E> result = null;
+		if (other == null) throw new NullPointerException();
+		Set<E> result = new ArraySet<E>(Math.min(this.size(),other.size()));
 		return result;
 	}
 
@@ -409,7 +451,7 @@ public class ArraySet<E> extends AbstractSet<E>
 	public int capacity()
 	{
 		// DONE 304 ArraySet#capacity(): replace with implementation
-		return elementCount;
+		return elementData.length;
 	}
 
 	/**
