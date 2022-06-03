@@ -149,7 +149,7 @@ public interface Set<E> extends Collection<E>
 	public default boolean isEmpty()
 	{
 		// DONE 004 Set#isEmpty(): replace with implementation using the iterator
-		return iterator().hasNext();
+		return !(iterator().hasNext());
 	}
 
 	/**

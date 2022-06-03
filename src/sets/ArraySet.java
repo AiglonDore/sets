@@ -178,6 +178,7 @@ public class ArraySet<E> extends AbstractSet<E>
 	{
 		// DONE 312 ArraySet#clear(): replace with implementation
 		elementData = (E[]) new Object[DefaultCapacity];
+		elementCount = 0;
 	}
 
 	/**
@@ -305,16 +306,10 @@ public class ArraySet<E> extends AbstractSet<E>
 		// DONE 318 ArraySet#toArray(T[]): replace with implementation
 		if (a.length >= this.size())
 		{
-			int  i = 0;
-			for (E elt : elementData)
-			{
-				a[i] = (T) elt;
-				i++;
-			}
-			while (i < a.length)
+			System.arraycopy(elementData, 0, a, 0, elementCount);
+			for (int i = elementCount; i < a.length; i++)
 			{
 				a[i] = null;
-				i++;
 			}
 			return a;
 		}
@@ -595,10 +590,11 @@ public class ArraySet<E> extends AbstractSet<E>
 		public F next() throws NoSuchElementException
 		{
 			// DONE 309 ArraySetIterator#next(): replace with implementation
-			index++;
 			if (index >= elementCount) throw new NoSuchElementException("Index is out of bounds.");
+			F elt = (F) elementData[index];
+			index++;
 			nextCalled = true;
-			return (F) elementData[index];
+			return elt;
 		}
 
 		/**
@@ -622,6 +618,7 @@ public class ArraySet<E> extends AbstractSet<E>
 			// DONE 310 ArraySetIterator#remove(): replace with implementation
 			if (nextCalled)
 			{
+				--index;
 				removeAtIndex(index);
 				nextCalled = false;
 			}
