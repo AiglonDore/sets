@@ -24,8 +24,8 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	 */
 	public ArrayListSet()
 	{
-		// TODO 200 ArrayListSet#ArrayListSet(): replace with implementation
-		list = null;
+		// DONE 200 ArrayListSet#ArrayListSet(): replace with implementation
+		list = new ArrayList<E>();
 	}
 
 	/**
@@ -38,8 +38,12 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	 */
 	public ArrayListSet(Collection<? extends E> c)
 	{
-		// TODO 201 ArrayListSet#ArrayListSet(Collection): replace with implementation
-		list = null;
+		// DONE 201 ArrayListSet#ArrayListSet(Collection): replace with implementation
+		list = new ArrayList<E>();
+		for (E elt : c)
+		{
+			list.add(elt);
+		}
 	}
 
 	// -------------------------------------------------------------------------
@@ -56,8 +60,10 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	@Override
 	public boolean add(E e) throws NullPointerException
 	{
-		// TODO 202 ArrayListSet#add(E): replace with implementation
-		return false;
+		// DONE 202 ArrayListSet#add(E): replace with implementation
+		if (e == null) throw new NullPointerException();
+		
+		return list.add(e);
 	}
 
 	/**
@@ -67,7 +73,8 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	@Override
 	public void clear()
 	{
-		// TODO 203 ArrayListSet#clear(): replace with implementation
+		// DONE 203 ArrayListSet#clear(): replace with implementation
+		list.clear();
 	}
 
 	/**
@@ -84,8 +91,8 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	@Override
 	public boolean contains(Object o)
 	{
-		// TODO 204 ArrayListSet#contains(Object): replace with implementation
-		return false;
+		// DONE 204 ArrayListSet#contains(Object): replace with implementation
+		return list.contains(o);
 	}
 
 	/**
@@ -96,8 +103,8 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	@Override
 	public boolean isEmpty()
 	{
-		// TODO 205 ArrayListSet#isEmpty(): replace with implementation
-		return false;
+		// DONE 205 ArrayListSet#isEmpty(): replace with implementation
+		return list.isEmpty();
 	}
 
 	/**
@@ -107,9 +114,9 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	@Override
 	public Iterator<E> iterator()
 	{
-		// TODO 206 ArrayListSet#iterator(): replace with implementation
+		// DONE 206 ArrayListSet#iterator(): replace with implementation
 		// Hint: does #list have an iterator ?
-		return null;
+		return list.iterator();
 	}
 
 	/**
@@ -122,8 +129,8 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	@Override
 	public boolean remove(Object o) throws NullPointerException
 	{
-		// TODO 207 ArrayListSet#remove(Object): replace with implementation
-		return false;
+		// DONE 207 ArrayListSet#remove(Object): replace with implementation
+		return list.remove(o);
 	}
 
 	/**
@@ -134,8 +141,8 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	@Override
 	public int size()
 	{
-		// TODO 208 ArrayListSet#size(): replace with implementation
-		return -1;
+		// DONE 208 ArrayListSet#size(): replace with implementation
+		return list.size();
 	}
 
 	/**
@@ -145,8 +152,8 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	@Override
 	public Object[] toArray()
 	{
-		// TODO 209 ArrayListSet#toArray(): replace with implementation
-		return null;
+		// DONE 209 ArrayListSet#toArray(): replace with implementation
+		return list.toArray();
 	}
 
 	/**
@@ -184,8 +191,8 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	@Override
 	public Object clone()
 	{
-		// TODO 211 ArrayListSet#clone(): replace with implementation
-		return null;
+		// DONE 211 ArrayListSet#clone(): replace with implementation
+		return new ArrayListSet((Collection<? extends E>)list.clone());
 	}
 
 	// -------------------------------------------------------------------------
@@ -202,8 +209,12 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	@Override
 	public Set<E> union(Set<E> other)
 	{
-		// TODO 212 ArrayListSet#union(Set): replace with implementation
-		Set<E> result = null;
+		// DONE 212 ArrayListSet#union(Set): replace with implementation
+		Set<E> result = new ArrayListSet<E>(this);
+		for (E elt : other)
+		{
+			result.add(elt);
+		}
 		return result;
 	}
 
@@ -217,8 +228,15 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	@Override
 	public Set<E> intersection(Set<E> other)
 	{
-		// TODO 213 ArrayListSet#intersection(Set): replace with implementation
-		Set<E> result = null;
+		// DONE 213 ArrayListSet#intersection(Set): replace with implementation
+		Set<E> result = new ArrayListSet<E>();
+		for (E elt : this)
+		{
+			if (other.contains(elt))
+			{
+				result.add(elt);
+			}
+		}
 		return result;
 	}
 
@@ -232,8 +250,15 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	@Override
 	public Set<E> difference(Set<E> other)
 	{
-		// TODO 214 ArrayListSet#difference(Set): replace with implementation
-		Set<E> result = null;
+		// DONE 214 ArrayListSet#difference(Set): replace with implementation
+		Set<E> result = new ArrayListSet<E>();
+		for (E elt : this)
+		{
+			if (!other.contains(elt))
+			{
+				result.add(elt);
+			}
+		}
 		return result;
 	}
 }

@@ -75,6 +75,7 @@ public interface Set<E> extends Collection<E>
 		// DONE 001 Set#clear(): replace with implementation using the iterator
 		for (Iterator<E> it = this.iterator();it.hasNext();)
 		{
+			it.next();
 			it.remove();
 		}
 	}
@@ -119,7 +120,7 @@ public interface Set<E> extends Collection<E>
 	public default boolean containsAll(Collection<?> c) throws
 		NullPointerException, ClassCastException
 	{
-		// TODO 003 Set#containsAll(Collection): replace with implementation using #contains(Object)
+		// DONE 003 Set#containsAll(Collection): replace with implementation using #contains(Object)
 		if (c == null)
 		{
 			throw new NullPointerException();
@@ -194,8 +195,24 @@ public interface Set<E> extends Collection<E>
 	public default boolean removeAll(Collection<?> c) throws
 		NullPointerException, ClassCastException
 	{
-		// TODO 006 Set#removeAll(Collection) replace with implementation using #remove(Object)
-		return false;
+		// DONE 006 Set#removeAll(Collection) replace with implementation using #remove(Object)
+		if (c == null)
+		{
+			throw new NullPointerException();
+		}
+		boolean output = true;
+		for (Iterator<?> it = c.iterator(); it.hasNext();)
+		{
+			if (elementsType().isInstance(it.next()))
+			{
+				output = output && remove(it.next());
+			}
+			else
+			{
+				throw new ClassCastException();
+			}
+		}
+		return output;
 	}
 
 	/**
@@ -207,8 +224,21 @@ public interface Set<E> extends Collection<E>
 	@Override
 	public default boolean retainAll(Collection<?> c) throws NullPointerException
 	{
-		// TODO 007 Set#retainAll(Collection): replace with implementation...
-		return false;
+		// DONE 007 Set#retainAll(Collection): replace with implementation...
+		if (c == null)
+		{
+			throw new NullPointerException();
+		}
+		boolean output = false;
+		for (Iterator<E> it = iterator(); it.hasNext();)
+		{
+			if (!c.contains(it.next()))
+			{
+				it.remove();
+				output = true;
+			}
+		}
+		return output;
 	}
 
 	/**
@@ -218,8 +248,15 @@ public interface Set<E> extends Collection<E>
 	@Override
 	public default int size()
 	{
-		// TODO 008 Set#size(): replace with implementation using the iterator
-		return -1;
+		// DONE 008 Set#size(): replace with implementation using the iterator
+		int length = 0;
+		Iterator<E> it = iterator();
+		while (it.hasNext())
+		{
+			it.next();
+			length++;
+		}
+		return length;
 	}
 
 	/**
@@ -292,7 +329,9 @@ public interface Set<E> extends Collection<E>
 	 */
 	public static <E> void union(Set<E> first, Set<E> second, Set<E> result) throws NullPointerException
 	{
-		// TODO 009 Set#union(Set, Set, Set): replace with implementation...
+		// DONE 009 Set#union(Set, Set, Set): replace with implementation...
+		if (first == null || second == null) throw new NullPointerException();
+		result = first.union(second);
 	}
 
 	/**
@@ -315,7 +354,9 @@ public interface Set<E> extends Collection<E>
 	 */
 	public static <E> void intersection(Set<E> first, Set<E> second, Set<E> result) throws NullPointerException
 	{
-		// TODO 010 Set#intersection(Set, Set, Set): replace with implementation...
+		// DONE 010 Set#intersection(Set, Set, Set): replace with implementation...
+		if (first == null || second == null) throw new NullPointerException();
+		result = first.intersection(second);
 	}
 
 	/**
@@ -340,7 +381,9 @@ public interface Set<E> extends Collection<E>
 	 */
 	public static <E> void difference(Set<E> first, Set<E> second, Set<E> result) throws NullPointerException
 	{
-		// TODO 011 Set#difference(Set, Set, Set): replace with implementation...
+		// DONE 011 Set#difference(Set, Set, Set): replace with implementation...
+		if (first == null || second == null) throw new NullPointerException();
+		result = first.difference(second);
 	}
 
 	/**
@@ -366,8 +409,9 @@ public interface Set<E> extends Collection<E>
 	 */
 	public default Set<E> symmetricDifference(Set<E> other) throws NullPointerException
 	{
-		// TODO 012 Set#symmetricDifference(Set): replace with implementation...
-		return null;
+		// DONE 012 Set#symmetricDifference(Set): replace with implementation...
+		if (other == null) throw new NullPointerException();
+		return this.difference(other).union(other.difference(this));
 	}
 
 	/**
@@ -379,7 +423,9 @@ public interface Set<E> extends Collection<E>
 	 */
 	public default Class<? extends E> elementsType()
 	{
-		// TODO 013 Set#elementsType(): replace with implementation...
-		return null;
+		// DONE 013 Set#elementsType(): replace with implementation...
+		if (isEmpty()) return null;
+		E elt = iterator().next();
+		return (Class<? extends E>) elt.getClass();
 	}
 }

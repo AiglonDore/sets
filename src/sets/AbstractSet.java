@@ -1,5 +1,7 @@
 package sets;
 
+import java.util.Iterator;
+
 /**
  * Partial implementation of {@link Set}.
  * Contains all operations implementations that can be carried out using
@@ -30,7 +32,20 @@ public abstract class AbstractSet<E> implements Set<E>
 	@Override
 	public boolean equals(Object o)
 	{
-		// TODO 100 AbstractSet#equals(Object): replace with implementation ...
+		// DONE 100 AbstractSet#equals(Object): replace with implementation ...
+		if (o == null)
+		{
+			return false;
+		}
+		if (o == this)
+		{
+			return true;
+		}
+		if (o instanceof Set)
+		{
+			Set obj = (Set) o;
+			return obj.contains(this) && this.contains(obj);
+		}
 		return false;
 	}
 
@@ -43,7 +58,11 @@ public abstract class AbstractSet<E> implements Set<E>
 	public int hashCode()
 	{
 		int hash = 0;
-		// TODO 101 AbstractSet#hashCode(): replace with implementation ...
+		// DONE 101 AbstractSet#hashCode(): replace with implementation ...
+		for (Iterator<E> it = iterator(); it.hasNext();)
+		{
+			hash += it.next().hashCode();
+		}
 		return hash;
 	}
 
@@ -58,7 +77,16 @@ public abstract class AbstractSet<E> implements Set<E>
 		StringBuilder builder = new StringBuilder();
 		builder.append('{');
 
-		// TODO 102 AbstractSet#toString(): replace with implementation ...
+		// DONE 102 AbstractSet#toString(): replace with implementation ...
+		
+		for (Iterator<E> it = iterator(); it.hasNext();)
+		{
+			builder.append(it.next().toString());
+			if (it.hasNext())
+			{
+				builder.append(',');
+			}
+		}
 
 		builder.append('}');
 		return builder.toString();

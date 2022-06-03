@@ -65,10 +65,11 @@ public class ArraySet<E> extends AbstractSet<E>
 	@SuppressWarnings("unchecked") // Required to cast Object[] into E[]
 	public ArraySet(int initialCapacity, int capacityIncrement) throws IllegalArgumentException
 	{
-		// TODO 300 ArraySet#ArraySet(int, int): replace with implementation
-		elementData = null;
+		if (initialCapacity < 1 || capacityIncrement < 1) throw new IllegalArgumentException();
+		// DONE 300 ArraySet#ArraySet(int, int): replace with implementation
+		elementData = (E[]) new Object[initialCapacity];
 		elementCount = 0;
-		this.capacityIncrement = 0;
+		this.capacityIncrement = capacityIncrement;
 	}
 
 	/**
@@ -78,7 +79,10 @@ public class ArraySet<E> extends AbstractSet<E>
 	 */
 	public ArraySet()
 	{
-		// TODO 301 ArraySet#ArraySet(): replace with implementation
+		// DONE 301 ArraySet#ArraySet(): replace with implementation
+		elementData = (E[]) new Object[DefaultCapacity];
+		elementCount = 0;
+		this.capacityIncrement = DefaultCapacityIncrement;
 	}
 
 	/**
@@ -89,7 +93,11 @@ public class ArraySet<E> extends AbstractSet<E>
 	 */
 	public ArraySet(int initialCapacity) throws IllegalArgumentException
 	{
-		// TODO 302 ArraySet#ArraySet(int): replace with implementation
+		// DONE 302 ArraySet#ArraySet(int): replace with implementation
+		if (initialCapacity < 1) throw new IllegalArgumentException();
+		elementData = (E[]) new Object[initialCapacity];
+		elementCount = 0;
+		this.capacityIncrement = DefaultCapacityIncrement;
 	}
 
 	/**
@@ -104,7 +112,24 @@ public class ArraySet<E> extends AbstractSet<E>
 	 */
 	public ArraySet(Collection<? extends E> c)
 	{
-		// TODO 303 ArraySet#ArraySet(Collection): replace with implementation
+		// DONE 303 ArraySet#ArraySet(Collection): replace with implementation
+		this(c.size());
+		if (c.isEmpty())
+		{
+			elementData = (E[]) new Object[DefaultCapacity];
+		}
+		else
+		{
+			for (E elt : c)
+			{
+				if (elt != null && !this.contains(elt))
+				{
+					elementCount++;
+					elementData[elementCount - 1] = elt;
+				}
+			}
+			strip();
+		}
 	}
 
 	// -------------------------------------------------------------------------
@@ -122,7 +147,17 @@ public class ArraySet<E> extends AbstractSet<E>
 	@Override
 	public boolean add(E e) throws NullPointerException
 	{
-		// TODO 311 ArraySet#add(E): replace with implementation
+		// DONE 311 ArraySet#add(E): replace with implementation
+		if (e == null) throw new NullPointerException();
+		if (!contains(e))
+		{
+			if (elementCount == elementData.length)
+			{
+				grow();
+			}
+			elementData[elementCount] = e;
+			return true;
+		}
 		return false;
 	}
 
@@ -134,7 +169,8 @@ public class ArraySet<E> extends AbstractSet<E>
 	@Override
 	public void clear()
 	{
-		// TODO 312 ArraySet#clear(): replace with implementation
+		// DONE 312 ArraySet#clear(): replace with implementation
+		elementData = (E[]) new Object[DefaultCapacity];
 	}
 
 	/**
@@ -152,7 +188,11 @@ public class ArraySet<E> extends AbstractSet<E>
 	@Override
 	public boolean contains(Object o)
 	{
-		// TODO 313 ArraySet#contains(Object): replace with implementation
+		// DONE 313 ArraySet#contains(Object): replace with implementation
+		for (int i = 0; i < elementCount; i++)
+		{
+			if (elementData[i].equals(o)) return true;
+		}
 		return false;
 	}
 
@@ -165,8 +205,8 @@ public class ArraySet<E> extends AbstractSet<E>
 	@Override
 	public boolean isEmpty()
 	{
-		// TODO 314 ArraySet#isEmpty(): replace with implementation
-		return false;
+		// DONE 314 ArraySet#isEmpty(): replace with implementation
+		return elementCount == 0;
 	}
 
 	/**
@@ -192,8 +232,20 @@ public class ArraySet<E> extends AbstractSet<E>
 	@Override
 	public boolean remove(Object o) throws NullPointerException
 	{
-		// TODO 315 ArraySet#remove(Object): replace with implementation
-		return false;
+		// DONE 315 ArraySet#remove(Object): replace with implementation
+		if (o == null) throw new NullPointerException();
+		int index = -1;
+		
+		for (int i = 0; i < elementCount; i++)
+		{
+			if (elementData[i].equals(o))
+			{
+				index = i;
+				break;
+			}
+		}
+		
+		return index >=0 && removeAtIndex(index);
 	}
 
 	/**
@@ -205,8 +257,8 @@ public class ArraySet<E> extends AbstractSet<E>
 	@Override
 	public int size()
 	{
-		// TODO 316 ArraySet#size(): replace with implementation
-		return -1;
+		// DONE 316 ArraySet#size(): replace with implementation
+		return elementCount;
 	}
 
 	/**
@@ -216,8 +268,8 @@ public class ArraySet<E> extends AbstractSet<E>
 	@Override
 	public Object[] toArray()
 	{
-		// TODO 317 ArraySet#toArray(): replace with implementation
-		Object[] output = null;
+		// DONE 317 ArraySet#toArray(): replace with implementation
+		Object[] output = elementData.clone();
 		return output;
 	}
 
@@ -277,7 +329,14 @@ public class ArraySet<E> extends AbstractSet<E>
 		StringBuilder builder = new StringBuilder();
 		builder.append('{');
 
-		// TODO 320 ArraySet#toString(): replace with implementation
+		// DONE 320 ArraySet#toString(): replace with implementation
+		
+		for (int i = 0; i < elementCount - 1; i++)
+		{
+			builder.append(elementData[i].toString());
+			builder.append(',');
+		}
+		builder.append(elementData[elementCount-1]);
 
 		builder.append('}');
 		return builder.toString();
@@ -349,8 +408,8 @@ public class ArraySet<E> extends AbstractSet<E>
 	 */
 	public int capacity()
 	{
-		// TODO 304 ArraySet#capacity(): replace with implementation
-		return 0;
+		// DONE 304 ArraySet#capacity(): replace with implementation
+		return elementCount;
 	}
 
 	/**
@@ -363,7 +422,12 @@ public class ArraySet<E> extends AbstractSet<E>
 	 */
 	public void strip() throws IllegalStateException
 	{
-		// TODO 305 ArraySet#strip(): replace with implementation
+		// DONE 305 ArraySet#strip(): replace with implementation
+		if (isEmpty())
+		{
+			throw new IllegalStateException();
+		}
+		elementData = Arrays.copyOf(elementData, elementCount);
 	}
 
 	/**
@@ -459,7 +523,9 @@ public class ArraySet<E> extends AbstractSet<E>
 		 */
 		public ArraySetIterator()
 		{
-			// TODO 307 ArraySetIterator#ArraySetIterator(): replace with implementation
+			// DONE 307 ArraySetIterator#ArraySetIterator(): replace with implementation
+			index = 0;
+			nextCalled = false;
 		}
 
 		/**
@@ -470,8 +536,8 @@ public class ArraySet<E> extends AbstractSet<E>
 		@Override
 		public boolean hasNext()
 		{
-			// TODO 308 ArraySetIterator#hasNext(): replace with implementation
-			return false;
+			// DONE 308 ArraySetIterator#hasNext(): replace with implementation
+			return index < elementCount;
 		}
 
 		/**
@@ -485,8 +551,9 @@ public class ArraySet<E> extends AbstractSet<E>
 		@Override
 		public F next() throws NoSuchElementException
 		{
-			// TODO 309 ArraySetIterator#next(): replace with implementation
-			return null;
+			// DONE 309 ArraySetIterator#next(): replace with implementation
+			index++;
+			return (F) elementData[index];
 		}
 
 		/**
@@ -507,8 +574,13 @@ public class ArraySet<E> extends AbstractSet<E>
 		@Override
 		public void remove()
 		{
-			// TODO 310 ArraySetIterator#remove(): replace with implementation
-			throw new IllegalStateException("next has not been called yet");
+			// DONE 310 ArraySetIterator#remove(): replace with implementation
+			if (nextCalled)
+			{
+				removeAtIndex(index);
+				nextCalled = false;
+			}
+			else throw new IllegalStateException("next has not been called yet");
 		}
 	}
 }
