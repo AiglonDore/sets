@@ -6,7 +6,7 @@ import java.util.Iterator;
  * Partial implementation of {@link Set}.
  * Contains all operations implementations that can be carried out using
  * other (potentially still abstract) operations.
- * @author davidroussel
+ * @author David Roussel and Aiglon Doré
  * @param <E> the type of elements in this set
  */
 public abstract class AbstractSet<E> implements Set<E>

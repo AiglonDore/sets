@@ -9,7 +9,7 @@ import java.util.Vector;
 /**
  * A Concrete implementation of {@link Set} based on partial implementation from
  * {@link AbstractSet} using an internal array to store elements.
- * @author davidroussel
+ * @author David Roussel and Aiglon Doré
  * @param <E> the type of elements in this set
  */
 public class ArraySet<E> extends AbstractSet<E>

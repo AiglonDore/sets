@@ -13,7 +13,7 @@ import java.util.Iterator;
  * 	- intersection
  * 	- difference
  * 	- symetric difference
- * @author davidroussel
+ * @author David Roussel and Aiglon Doré
  * @param <E> the type of elements in this set
  */
 public interface Set<E> extends Collection<E>
