@@ -89,7 +89,7 @@ public abstract class AbstractSet<E> implements Set<E>
 			builder.append(it.next().toString());
 			if (it.hasNext())
 			{
-				builder.append(',');
+				builder.append(", ");
 			}
 		}
 

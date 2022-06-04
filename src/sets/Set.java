@@ -210,7 +210,8 @@ public interface Set<E> extends Collection<E>
 			{
 				if (elementsType().isInstance(elt))
 				{
-					output = output && remove(elt);
+					E obj = (E) elt;
+					if (this.contains(obj)) output = remove(elt) && output;
 				}
 				else
 				{

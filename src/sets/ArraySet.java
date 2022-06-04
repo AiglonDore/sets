@@ -278,7 +278,7 @@ public class ArraySet<E> extends AbstractSet<E>
 	public Object[] toArray()
 	{
 		// DONE 317 ArraySet#toArray(): replace with implementation
-		Object[] output = elementData.clone();
+		Object[] output = Arrays.copyOf(elementData, elementCount);
 		return output;
 	}
 

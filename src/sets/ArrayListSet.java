@@ -131,6 +131,7 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	public boolean remove(Object o) throws NullPointerException
 	{
 		// DONE 207 ArrayListSet#remove(Object): replace with implementation
+		if (o == null) throw new NullPointerException();
 		return list.remove(o);
 	}
 
