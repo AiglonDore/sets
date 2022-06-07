@@ -300,22 +300,29 @@ public class ArraySet<E> extends AbstractSet<E>
 	 * @throws NullPointerException if the specified array is null
 	 * @see Vector#toArray() implementation for inspiration
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T[] toArray(T[] a)
 	{
 		// DONE 318 ArraySet#toArray(T[]): replace with implementation
 		if (a.length >= this.size())
 		{
-			System.arraycopy(elementData, 0, a, 0, elementCount);
-			for (int i = elementCount; i < a.length; i++)
+			int  i = 0;
+			for (E elt : this)
+			{
+				a[i] = (T) elt;
+				i++;
+			}
+			while (i < a.length)
 			{
 				a[i] = null;
+				i++;
 			}
 			return a;
 		}
 		else
 		{
-			a = Arrays.copyOf(a, elementData.length);
+			a = Arrays.copyOf(a, elementCount);
 			return this.toArray(a);
 		}
 	}
@@ -432,6 +439,13 @@ public class ArraySet<E> extends AbstractSet<E>
 		// The new set has (at most) the size of the smallest set
 		if (other == null) throw new NullPointerException();
 		Set<E> result = new ArraySet<E>(Math.min(this.size(),other.size()));
+		for (int i = 0; i < elementCount; i++)
+		{
+			if (!other.contains(elementData[i]))
+			{
+				result.add(elementData[i]);
+			}
+		}
 		return result;
 	}
 
@@ -539,7 +553,7 @@ public class ArraySet<E> extends AbstractSet<E>
 	 * @param <F> The type of element to iterate over
 	 * @implNote We can't use <E> here since it would be masked by the <E> of
 	 * {@link ArraySet}, so we're using a another one such as <F>.
-	 * @author davidroussel
+	 * @author David Roussel and Aiglon Doré
 	 */
 	protected class ArraySetIterator<F> implements Iterator<F>
 	{

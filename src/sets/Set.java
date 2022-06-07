@@ -193,6 +193,7 @@ public interface Set<E> extends Collection<E>
 	 * set are incompatible with the specified collection
 	 * @post No elements from c can be found in this set
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public default boolean removeAll(Collection<?> c) throws
 		NullPointerException, ClassCastException
@@ -202,16 +203,22 @@ public interface Set<E> extends Collection<E>
 		{
 			throw new NullPointerException();
 		}
-		boolean output = true;
+		if (this.isEmpty() || c.isEmpty()) return false;
+		Class<? extends E> elementsClass = elementsType();
+		boolean output = false;
 		for (Iterator<?> it = c.iterator(); it.hasNext();)
 		{
 			Object elt = it.next();
 			if (elt != null)
 			{
-				if (elementsType().isInstance(elt))
+				if (elementsClass.isInstance(elt))
 				{
 					E obj = (E) elt;
-					if (this.contains(obj)) output = remove(elt) && output;
+					if (this.contains(obj))
+					{
+						this.remove(obj);
+						output = true;
+					}
 				}
 				else
 				{
@@ -338,8 +345,9 @@ public interface Set<E> extends Collection<E>
 	public static <E> void union(Set<E> first, Set<E> second, Set<E> result) throws NullPointerException
 	{
 		// DONE 009 Set#union(Set, Set, Set): replace with implementation...
-		if (first == null || second == null) throw new NullPointerException();
-		result = first.union(second);
+		if (first == null || second == null || result == null) throw new NullPointerException();
+		result.clear();
+		result.addAll(first.union(second));
 	}
 
 	/**
@@ -363,8 +371,9 @@ public interface Set<E> extends Collection<E>
 	public static <E> void intersection(Set<E> first, Set<E> second, Set<E> result) throws NullPointerException
 	{
 		// DONE 010 Set#intersection(Set, Set, Set): replace with implementation...
-		if (first == null || second == null) throw new NullPointerException();
-		result = first.intersection(second);
+		if (first == null || second == null || result == null) throw new NullPointerException();
+		result.clear();
+		result.addAll(first.intersection(second));
 	}
 
 	/**
@@ -390,8 +399,9 @@ public interface Set<E> extends Collection<E>
 	public static <E> void difference(Set<E> first, Set<E> second, Set<E> result) throws NullPointerException
 	{
 		// DONE 011 Set#difference(Set, Set, Set): replace with implementation...
-		if (first == null || second == null) throw new NullPointerException();
-		result = first.difference(second);
+		if (first == null || second == null || result == null) throw new NullPointerException();
+		result.clear();
+		result.addAll(first.difference(second));
 	}
 
 	/**
@@ -429,6 +439,7 @@ public interface Set<E> extends Collection<E>
 	 * @implNote Useful in methods requiring to throw {@link ClassCastException}
 	 * such as {@link #containsAll(Collection)} and {@link #removeAll(Collection)}
 	 */
+	@SuppressWarnings("unchecked")
 	public default Class<? extends E> elementsType()
 	{
 		// DONE 013 Set#elementsType(): replace with implementation...

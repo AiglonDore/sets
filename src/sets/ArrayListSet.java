@@ -272,6 +272,8 @@ public class ArrayListSet<E> extends AbstractSet<E>
 	public Set<E> difference(Set<E> other)
 	{
 		// DONE 214 ArrayListSet#difference(Set): replace with implementation
+		System.out.println(this);
+		System.out.println(other);
 		Set<E> result = new ArrayListSet<E>();
 		for (E elt : this)
 		{
@@ -280,6 +282,7 @@ public class ArrayListSet<E> extends AbstractSet<E>
 				result.add(elt);
 			}
 		}
+		System.out.println(result);
 		return result;
 	}
 }
